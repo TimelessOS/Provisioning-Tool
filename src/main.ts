@@ -17,6 +17,19 @@ async function greet() {
   }
 }
 
+async function welcome() {
+  let welcomeForm = document.getElementById("welcome-form")
+  let greetForm = document.getElementById("greet-form")
+  if (welcomeForm && greetForm) {
+    welcomeForm.className = "hidden"
+    welcomeForm.addEventListener("transitionend", () => {
+      welcomeForm.style.display = "none"
+      console.log("A")
+      greetForm.className = "hidable"
+    })
+  }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   usernameInputEl = document.querySelector("#username-input")
   passwordInputEl = document.querySelector("#password-input")
@@ -26,6 +39,10 @@ window.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#greet-form")?.addEventListener("submit", (e) => {
     e.preventDefault()
     greet()
+  });
+  document.querySelector("#welcome-form")?.addEventListener("submit", (e) => {
+    e.preventDefault()
+    welcome()
   });
 });
 
@@ -122,6 +139,7 @@ var tzStrings = [
 var localeList = [
   { "locale": "en_US.UTF-8", "name": "English (United States)" },
   { "locale": "en_GB.UTF-8", "name": "English (United Kingdom)" },
+  { "locale": "en_NZ.UTF-8", "name": "English (New Zealand)" },
   { "locale": "fr_FR.UTF-8", "name": "French (France)" },
   { "locale": "de_DE.UTF-8", "name": "German (Germany)" },
   { "locale": "es_ES.UTF-8", "name": "Spanish (Spain)" },

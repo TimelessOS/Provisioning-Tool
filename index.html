@@ -13,9 +13,17 @@
   <main class="container">
     <h1>Welcome to EaterOS</h1>
 
-    <p>This will only take a minute.</p>
+    <form class="hidable" id="welcome-form">
+      <p>
+        <h3>Welcome! Willkommen! Bienvenido! Yōkoso! Välkommen!</h3>
+        <select name="locale-select" id="locale-list">
+        </select>
+      </p>
+      <button type="submit">Get Started</button>
+    </form>
 
-    <form class="row" id="greet-form">
+    <form class="hidable hidden" id="greet-form">
+      <h3>This will only take a minute.</h3>
       <p>
         <label for="username-select">What would you like your username to be?</label>
         <input name="username-select" id="username-input" class="space-right" placeholder="Enter a username..." />
@@ -28,11 +36,6 @@
       <p>
       <label for="tz-select">What timezone are you in?</label>
       <select name="tz-select" id="timezone-list">
-      </select>
-    </p>
-    <p>
-      <label for="locale-select">Preferred language?</label>
-      <select name="locale-select" id="locale-list">
       </select>
     </p>
       <p>

@@ -24,11 +24,6 @@
   text-align: center;
 }
 
-.rowa {
-  display: flex;
-  justify-content: center;
-}
-
 a {
   font-weight: 500;
   color: #646cff;
@@ -106,11 +101,11 @@ button {
 .hidable {
   opacity: 1;
   transition:
-    opacity 2s;
+    opacity 1s;
 }
 
-.hidable > .hidden {
+.hidden {
   opacity: 0;
   transition:
-    opacity 2s;
+    opacity 1s;
 }
