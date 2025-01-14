@@ -66,14 +66,14 @@ fn hash_password(password: &str) -> String {
     engine.encrypted
 }
 
-// Sets the hostname to EaterOS-000, with 000 being 3 random numbers
+// Sets the hostname
 async fn set_hostname() -> Result<(), Error> {
     let conn = zbus::Connection::system().await.unwrap();
     let manager = zbus_systemd::hostname1::HostnamedProxy::new(&conn)
         .await
         .unwrap();
 
-    let hostname = "EaterOS-".to_owned() + &rand::thread_rng().gen_range(100..999).to_string();
+    let hostname = "TimelessOS-".to_owned() + &rand::thread_rng().gen_range(100..999).to_string();
 
     manager.set_static_hostname(hostname, true).await
 }
