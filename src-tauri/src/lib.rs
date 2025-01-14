@@ -7,34 +7,31 @@ use libcrypt_rs::{Crypt, Encryptions};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 #[tauri::command]
-async fn greet(app: AppHandle, username: &str, password: &str, timezone: &str) -> Result<(), ()> {
-    println!("Creating home");
-    create_home(username, password).await.unwrap();
-    println!("Created home");
-    set_timezone(timezone).await.unwrap();
-    println!("Set Timezone");
-    set_hostname().await.unwrap();
-    println!("Set Hostname");
+async fn greet(app: AppHandle, username: &str, password: &str, timezone: &str, locale: &str) -> Result<(), ()> {
+    create_home(username, password, locale).await.expect("Could not create home");
+    set_timezone(timezone).await.expect("Could not set Timezone");
+    set_hostname().await.expect("Could not set hostname");
+    set_locale(locale).await.expect("Could not set locale");
 
     AppHandle::exit(&app, 0);
     Ok(())
 }
 
-async fn create_home(username: &str, password: &str) -> Result<(), Error> {
+async fn create_home(username: &str, password: &str, locale: &str) -> Result<(), Error> {
     let conn = zbus::Connection::system().await.unwrap();
     let manager = zbus_systemd::home1::ManagerProxy::new(&conn).await.unwrap();
 
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .expect("Time went backwards");
-    let time = now.as_micros(); // TODO: Set this to the current time
+    let time = now.as_micros();
 
     let user_record = json!({
         "userName": username.to_lowercase(),
         "realName": username,
         "disposition": "regular",
         "shell": "/usr/bin/bash",
-        "preferredLanguage": "en_US.UTF-8",
+        "preferredLanguage": locale,
         "storage": "luks",
         "memberOf": ["wheel", "users", "libvirt", "sambashare", "lpadmin", "lp", "sudo"],
         "lastChangeUSec" : time,
@@ -79,6 +76,19 @@ async fn set_hostname() -> Result<(), Error> {
     let hostname = "EaterOS-".to_owned() + &rand::thread_rng().gen_range(100..999).to_string();
 
     manager.set_static_hostname(hostname, true).await
+}
+
+// Sets the locale
+async fn set_locale(locale: &str) -> Result<(), Error> {
+    let conn = zbus::Connection::system().await.unwrap();
+    let manager = zbus_systemd::locale1::LocaledProxy::new(&conn)
+        .await
+        .unwrap();
+
+    let mut locale_vec : Vec<String> = Vec::new();
+    locale_vec.push(locale.to_string());
+    
+    manager.set_locale(locale_vec, true).await
 }
 
 // Sets the timezone

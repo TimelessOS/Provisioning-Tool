@@ -3,15 +3,16 @@ import { invoke } from "@tauri-apps/api/core"
 let usernameInputEl: HTMLInputElement | null
 let passwordInputEl: HTMLInputElement | null
 let timezoneInputEl: HTMLSelectElement | null
+let localeInputEl: HTMLSelectElement | null
 let greetMsgEl: HTMLElement | null
 
 async function greet() {
-  if (greetMsgEl && usernameInputEl && passwordInputEl && timezoneInputEl) {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+  if (greetMsgEl && usernameInputEl && passwordInputEl && timezoneInputEl && localeInputEl) {
     greetMsgEl.textContent = await invoke("greet", {
       username: usernameInputEl.value,
       password: passwordInputEl.value,
-      timezone: timezoneInputEl.value
+      timezone: timezoneInputEl.value,
+      locale: localeInputEl.value
     });
   }
 }
@@ -20,6 +21,7 @@ window.addEventListener("DOMContentLoaded", () => {
   usernameInputEl = document.querySelector("#username-input")
   passwordInputEl = document.querySelector("#password-input")
   timezoneInputEl = document.querySelector("#timezone-list")
+  localeInputEl = document.querySelector("#locale-list")
   greetMsgEl = document.querySelector("#greet-msg")
   document.querySelector("#greet-form")?.addEventListener("submit", (e) => {
     e.preventDefault()
@@ -117,9 +119,56 @@ var tzStrings = [
   { "label": "(GMT+13:00) Nuku'alofa", "value": "Pacific/Tongatapu" }
 ]
 
+var localeList = [
+  { "locale": "en_US.UTF-8", "name": "English (United States)" },
+  { "locale": "en_GB.UTF-8", "name": "English (United Kingdom)" },
+  { "locale": "fr_FR.UTF-8", "name": "French (France)" },
+  { "locale": "de_DE.UTF-8", "name": "German (Germany)" },
+  { "locale": "es_ES.UTF-8", "name": "Spanish (Spain)" },
+  { "locale": "it_IT.UTF-8", "name": "Italian (Italy)" },
+  { "locale": "pt_PT.UTF-8", "name": "Portuguese (Portugal)" },
+  { "locale": "pt_BR.UTF-8", "name": "Portuguese (Brazil)" },
+  { "locale": "zh_CN.UTF-8", "name": "Chinese (Simplified, China)" },
+  { "locale": "zh_TW.UTF-8", "name": "Chinese (Traditional, Taiwan)" },
+  { "locale": "ja_JP.UTF-8", "name": "Japanese (Japan)" },
+  { "locale": "ko_KR.UTF-8", "name": "Korean (South Korea)" },
+  { "locale": "ru_RU.UTF-8", "name": "Russian (Russia)" },
+  { "locale": "ar_SA.UTF-8", "name": "Arabic (Saudi Arabia)" },
+  { "locale": "hi_IN.UTF-8", "name": "Hindi (India)" },
+  { "locale": "bn_IN.UTF-8", "name": "Bengali (India)" },
+  { "locale": "ur_PK.UTF-8", "name": "Urdu (Pakistan)" },
+  { "locale": "tr_TR.UTF-8", "name": "Turkish (Turkey)" },
+  { "locale": "pl_PL.UTF-8", "name": "Polish (Poland)" },
+  { "locale": "nl_NL.UTF-8", "name": "Dutch (Netherlands)" },
+  { "locale": "sv_SE.UTF-8", "name": "Swedish (Sweden)" },
+  { "locale": "no_NO.UTF-8", "name": "Norwegian (Norway)" },
+  { "locale": "fi_FI.UTF-8", "name": "Finnish (Finland)" },
+  { "locale": "da_DK.UTF-8", "name": "Danish (Denmark)" },
+  { "locale": "cs_CZ.UTF-8", "name": "Czech (Czech Republic)" },
+  { "locale": "hu_HU.UTF-8", "name": "Hungarian (Hungary)" },
+  { "locale": "el_GR.UTF-8", "name": "Greek (Greece)" },
+  { "locale": "he_IL.UTF-8", "name": "Hebrew (Israel)" },
+  { "locale": "th_TH.UTF-8", "name": "Thai (Thailand)" },
+  { "locale": "vi_VN.UTF-8", "name": "Vietnamese (Vietnam)" },
+  { "locale": "uk_UA.UTF-8", "name": "Ukrainian (Ukraine)" },
+  { "locale": "id_ID.UTF-8", "name": "Indonesian (Indonesia)" },
+  { "locale": "ms_MY.UTF-8", "name": "Malay (Malaysia)" },
+  { "locale": "fa_IR.UTF-8", "name": "Persian (Iran)" },
+  { "locale": "ro_RO.UTF-8", "name": "Romanian (Romania)" },
+  { "locale": "bg_BG.UTF-8", "name": "Bulgarian (Bulgaria)" },
+  { "locale": "sl_SI.UTF-8", "name": "Slovenian (Slovenia)" },
+  { "locale": "hr_HR.UTF-8", "name": "Croatian (Croatia)" },
+  { "locale": "sk_SK.UTF-8", "name": "Slovak (Slovakia)" },
+  { "locale": "et_EE.UTF-8", "name": "Estonian (Estonia)" },
+  { "locale": "lt_LT.UTF-8", "name": "Lithuanian (Lithuania)" },
+  { "locale": "lv_LV.UTF-8", "name": "Latvian (Latvia)" },
+  { "locale": "is_IS.UTF-8", "name": "Icelandic (Iceland)" }
+]
+
+
 // Generate Timezones
 
-var select = document.querySelector("#timezone-list")!
+var timezoneSelect = document.querySelector("#timezone-list")!
 
 for (var i = 0; i < tzStrings.length; i++) {
   var tz = tzStrings[i],
@@ -127,5 +176,18 @@ for (var i = 0; i < tzStrings.length; i++) {
 
   option.value = tz.value
   option.appendChild(document.createTextNode(tz.label))
-  select.appendChild(option)
+  timezoneSelect.appendChild(option)
+}
+
+// Generate Locales
+
+var localeSelect = document.querySelector("#locale-list")!
+
+for (var i = 0; i < localeList.length; i++) {
+  var locale = localeList[i],
+    option = document.createElement("option");
+
+  option.value = locale.locale
+  option.appendChild(document.createTextNode(locale.name))
+  localeSelect.appendChild(option)
 }
