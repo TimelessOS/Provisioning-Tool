@@ -101,8 +101,6 @@ async fn set_timezone(timezone: &str) -> Result<(), Error> {
     manager
         .set_timezone(timezone.to_string(), true)
         .await
-        .unwrap();
-    Ok(())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
